@@ -13,3 +13,10 @@ start app cmds: prod: npm start dev: npm run dev
 set up middlewares using app.use()
 
 test the endpoint on postman
+-create mongodb atlas db account
+-connect app to db using manggse connection
+-setup app schema
+-our task app: major player and relationships
+USERS, TASK
+user field: id, role (admin, default, supervisor), firstName, lastName, phoneNumber,userCode
+task field: id, userId(reference to user model)
