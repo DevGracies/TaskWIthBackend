@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import UserModel from "../models/User.js";
 import { generateCode } from "../utils/generateUniqueCode.js";
-
+import { serializeUser } from "../utils/serializeUser.js";
 export const createUser = (req, res) => {
   res.status(httpStatus.OK).json({
     status: "success",

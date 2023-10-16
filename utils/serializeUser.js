@@ -1,4 +1,5 @@
 export const serializeUser = (user) => {
-  const { password, ...rest } = user;
-  return rest;
+  console.log(user, "user");
+  const { _id, firstName, lastName, email, role, ...rest } = user;
+  return { _id, firstName, lastName, email, role };
 };
