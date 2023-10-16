@@ -20,3 +20,6 @@ test the endpoint on postman
 USERS, TASK
 user field: id, role (admin, default, supervisor), firstName, lastName, phoneNumber,userCode
 task field: id, userId(reference to user model)
+
+
+note: you must always add .js to the path of the import 
