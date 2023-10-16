@@ -21,5 +21,8 @@ USERS, TASK
 user field: id, role (admin, default, supervisor), firstName, lastName, phoneNumber,userCode
 task field: id, userId(reference to user model)
 
+install mongoose
+install jsonwebtoken
+intal npm i bcrypt
 
-note: you must always add .js to the path of the import 
+note: you must always add .js to the path of the import

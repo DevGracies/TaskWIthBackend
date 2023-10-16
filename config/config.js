@@ -11,6 +11,8 @@ const envValidation = Joi.object()
     PORT: Joi.number().default(9000),
     API_KEY: Joi.string().required(),
     MONGO_URL: Joi.string().required(),
+    JWT_SECRET: Joi.string().required(),
+    JWT_EXPIRT: Joi.string().required(),
   })
   .unknown();
 
