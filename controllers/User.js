@@ -3,7 +3,7 @@ import UserModel from "../models/User.js";
 import { generateCode } from "../utils/generateUniqueCode.js";
 import { serializeUser } from "../utils/serializeUser.js";
 import { generateToken } from "../utils/jwt-token.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;

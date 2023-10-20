@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+
+// this is a schema, it is use to create the structure of our database
 // user fields: id, role (admin, default,supervisor), firsName, lastName, email,phoneNumber, userCode
 // task fields: id userId(reference to user model - one => many), title, desc, status
 

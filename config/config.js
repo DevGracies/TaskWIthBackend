@@ -1,5 +1,6 @@
 import Joi from "joi";
-import { dotenv } from "dotenv";
+import pkg from "dotenv";
+const { dotenv } = pkg;
 
 dotenv.config({});
 
