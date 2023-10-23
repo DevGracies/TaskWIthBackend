@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 // this is a schema, it is use to create the structure of our database
 // user fields: id, role (admin, default,supervisor), firsName, lastName, email,phoneNumber, userCode
 // task fields: id userId(reference to user model - one => many), title, desc, status
-
 const UserSchema = mongoose.Schema(
   {
     firstName: { type: String, required: true },
@@ -18,6 +17,7 @@ const UserSchema = mongoose.Schema(
     userCode: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     isverified: { type: Boolean, default: false },
+    tasks: [{ type: mongoose.Schema.ObjectId }],
   },
   { timestamp: true }
 );

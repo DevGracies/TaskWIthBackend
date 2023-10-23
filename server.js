@@ -14,8 +14,10 @@ app.use(cors());
 app.use(morgan("dev"));
 //controllers
 import UserRoute from "./Routes/User.js";
+import TaskRoute from "./Routes/Task.js";
 
 app.use("/users", UserRoute);
+app.use("/task", TaskRoute);
 app.get("/", (req, res) => {
   res.status(httpStatus.OK).json({
     status: "success",
