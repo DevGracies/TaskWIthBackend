@@ -12,18 +12,17 @@ const app = express();
 //general middlewares
 app.use(cors());
 app.use(morgan("dev"));
-
 //controllers
 import UserRoute from "./Routes/User.js";
 
 app.use("/users", UserRoute);
-
 app.get("/", (req, res) => {
   res.status(httpStatus.OK).json({
     status: "success",
     payload: "Welcome to task app manger ",
   });
 });
+// highlight all.. shift + alt + downarrow = to replicate the same
 
 app.all("*", (req, res) => {
   res.status(httpStatus.NOT_FOUND).json({
