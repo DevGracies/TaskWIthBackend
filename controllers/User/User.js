@@ -3,10 +3,12 @@ import UserModel from "../../models/User.js";
 import { generateCode } from "../../utils/generateUniqueCode.js";
 import { serializeUser } from "../../utils/serializeUser.js";
 import { generateToken } from "../../utils/jwt-token.js";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
+  console.log(req.body, "req.body");
 
   try {
     //confirm that email exist in db
@@ -67,7 +69,7 @@ export const createUser = async (req, res) => {
       password: hashedPassword,
       phoneNumber,
       userCode: generateCode(6),
-      role: "supervisor",
+      role: "admin",
     });
     res.status(httpStatus.OK).json({
       status: "success",
@@ -83,7 +85,7 @@ export const createUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const users = await UserModel.find({});
+    const users = await UserModel.find({}).populate("tasks");
     res.status(httpStatus.OK).json({
       status: "success",
       payload: users,

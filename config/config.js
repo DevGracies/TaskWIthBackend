@@ -1,8 +1,12 @@
 import Joi from "joi";
-import pkg from "dotenv";
-const { dotenv } = pkg;
+import dotenv from "dotenv";
+import path from "path";
 
-dotenv.config({});
+// Specify the path to your .env file here
+const __dir = path.resolve();
+
+const envFilePath = path.resolve(__dir, ".env");
+dotenv.config({ path: envFilePath });
 
 const envValidation = Joi.object()
   .keys({
@@ -11,7 +15,7 @@ const envValidation = Joi.object()
       .required(),
     PORT: Joi.number().default(9000),
     API_KEY: Joi.string().required(),
-    MONGO_URL: Joi.string().required(),
+    MONGO_URI: Joi.string().required(),
     JWT_SECRET: Joi.string().required(),
     JWT_EXPIRY: Joi.string().required(),
   })
@@ -22,7 +26,7 @@ const { value: envVar, error } = envValidation
   .validate(process.env);
 
 if (error) {
-  throw new Error(`Config validation error: ${errorr.message}`);
+  throw new Error(`Config validation error: ${error.message}`);
 }
 
 export const config = {
@@ -33,7 +37,7 @@ export const config = {
     jwt_expiry: envVar.JWT_EXPIRY,
   },
   api_key: envVar.API_KEY,
-  mangodb: {
-    db_url: envVar.MONGO_URL,
+  mongodb: {
+    db_url: envVar.MONGO_URI,
   },
 };
