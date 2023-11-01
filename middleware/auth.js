@@ -3,9 +3,8 @@ import UserModel from "../models/User.js";
 import httpStatus from "http-status";
 import { config } from "../config/config.js";
 
-//authentication via bearer token
-
-export const verifyUser = async (res, req, next) => {
+//authentication via bearer token - user identity
+export const verifyUser = async (req, res, next) => {
   try {
     if (
       !req.headers ||
@@ -14,14 +13,16 @@ export const verifyUser = async (res, req, next) => {
     ) {
       res.status(httpStatus.BAD_REQUEST).json({
         error: "error",
-        message: "Not Authorized, No token",
+        message: "Not Athorized, No token",
       });
       return;
     }
-    //get the token
+
+    // get teh token
     const token = req.headers.authorization.split(" ")[1];
-    //verify the action
+    //verify the token
     const decoded = JWT.verify(token, config.jwt.jwt_secret);
+
     const user = await UserModel.findById({ _id: decoded.id });
     if (!user) {
       res.status(httpStatus.BAD_REQUEST).json({
@@ -29,6 +30,7 @@ export const verifyUser = async (res, req, next) => {
         message: "User not found",
       });
     }
+
     //attach the user to the rq object
     req.user = user;
     next();

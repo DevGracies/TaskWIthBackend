@@ -5,13 +5,15 @@ function validationMiddleware(Schema, type) {
       allowUnknown: true,
       stripUnknown: true,
     };
+
     try {
       if (type == "PARAMS") {
-        const value = await Schema.validateAsyc(req.params, validationOptions);
+        const value = await Schema.validateAsync(req.params, validationOptions);
         req.params = value;
         return next();
       }
-      if (type == "PARAMS") {
+
+      if (type == "QEURY") {
         const value = await Schema.validateAsync(req.query, validationOptions);
         req.query = value;
         return next();
@@ -22,7 +24,7 @@ function validationMiddleware(Schema, type) {
     } catch (e) {
       const errors = [];
 
-      e.details.foreach((error) => {
+      e.details.forEach((error) => {
         errors.push(error.message);
       });
       res.status(400).send({ errors });
