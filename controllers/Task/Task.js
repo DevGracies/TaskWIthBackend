@@ -1,32 +1,29 @@
 import httpStatus from "http-status";
-import TaskModel from "../../models/Task.js";
 import UserModel from "../../models/User.js";
+import taskModel from "../../models/Task.js";
 
 export const createTask = async (req, res) => {
-  //collect required field from the body
+  // collect required field from the body
   const { title, desc } = req.body;
-  // get the current user id
+  //    get the current user id
   const userId = req.user.id;
   // create the task record
-
   try {
-    const titleValidation = await TaskModel.findOne({ title: title });
-    if (titleValidation) {
+    const titleExists = await taskModel.findOne({ title: title });
+    if (titleExists) {
       res.status(httpStatus.BAD_REQUEST).json({
         status: "error",
-        payload: "title exist",
+        payload: "Title exists.",
       });
       return;
     }
-    const task = await TaskModel.create({
+    const task = await taskModel.create({
       title,
       desc,
       userId,
     });
-    // pass the create task as reference to the user model
-    const user = await UserModel.findOne({
-      _id: userId,
-    });
+    // pass the created task as reference to the user model
+    const user = await UserModel.findOne({ _id: userId });
     user.tasks.push(task._id);
     await user.save();
     res.status(httpStatus.CREATED).json({
@@ -41,33 +38,60 @@ export const createTask = async (req, res) => {
   }
 };
 
-export const getTask = async (res, req) => {
-  const { id } = req.params;
+export const getTasks = async (req, res) => {
   try {
-    const taskExist = await TaskModel.findById({ _id: id });
-    if (!taskExist) {
-      res.status(httpStatus.NOT_FOUND).json({
-        status: "error",
-        payload: "task not found",
-      });
-      return;
-    }
+    const tasks = await taskModel
+      .find({ userId: req.user.id })
+      .populate("userId");
+
     res.status(httpStatus.OK).json({
-      status: "sucess",
-      payload: taskExist,
+      status: "success",
+      payload: tasks,
     });
   } catch (error) {
     res.status(httpStatus.BAD_REQUEST).json({
       status: "error",
-      payload: err.message,
+      payload: error.message,
     });
   }
 };
 
-export const deleteTask = async (res, req) => {
-  const { id } = req.param;
+export const updateTask = async (req, res) => {
+  console.log("here");
+  const { title, desc } = req.body;
+  const taskId = req.params.id;
   try {
-    const task = await TaskModel.findById({ _id: id });
+    const taskExists = await taskModel.findOne({ _id: taskId });
+    console.log(taskExists, "taskId");
+    if (!taskExists) {
+      res.status(httpStatus.NOT_FOUND).json({
+        status: "error",
+        payload: "tasks does not exists.",
+      });
+      return;
+    }
+
+    const updatedTasks = await taskModel.findOneAndUpdate(
+      { _id: taskId },
+      { desc, title },
+      { new: true }
+    );
+    res.status(httpStatus.OK).json({
+      status: "success",
+      payload: updatedTasks,
+    });
+  } catch (error) {
+    res.status(httpStatus.BAD_REQUEST).json({
+      status: "error",
+      payload: error.message,
+    });
+  }
+};
+
+export const deleteTask = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const task = await taskModel.findById({ _id: id });
     if (!task) {
       res.status(httpStatus.NOT_FOUND).json({
         status: "error",
@@ -75,14 +99,40 @@ export const deleteTask = async (res, req) => {
       });
       return;
     }
-    await task.findByIdAndDelete({ _id: id });
+    await taskModel.findByIdAndDelete({ _id: id });
     res.status(httpStatus.OK).json({
       status: "success",
-      payload: "user removed",
+      payload: "delete success",
     });
   } catch (error) {
     res.status(httpStatus.BAD_REQUEST).json({
-      status: error.message,
+      status: "error",
+      payload: error.message,
+    });
+  }
+};
+
+export const getTask = async (req, res) => {
+  const { id } = req.params;
+  console.log("here");
+  try {
+    const task = await taskModel.findById({ _id: id });
+    if (!task) {
+      console.log("not founc");
+      res.status(httpStatus.NOT_FOUND).json({
+        status: "error",
+        payload: "task not found",
+      });
+      return;
+    }
+    res.status(httpStatus.OK).json({
+      status: "success",
+      payload: task,
+    });
+  } catch (error) {
+    res.status(httpStatus.BAD_REQUEST).json({
+      status: "error",
+      payload: error.message,
     });
   }
 };
