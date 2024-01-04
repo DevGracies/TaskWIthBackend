@@ -3,7 +3,7 @@ import UserModel from "../../models/User.js";
 import { generateCode } from "../../utils/generateUniqueCode.js";
 import { serializeUser } from "../../utils/serializeUser.js";
 import { generateToken } from "../../utils/jwt-token.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -45,20 +45,21 @@ export const loginUser = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
+  console.log(req.body, "req.body");
   const { firstName, lastName, email, password, phoneNumber } = req.body;
-
+  console.log("createUser", firstName, lastName, email, password, phoneNumber);
   try {
     //check if email exist
     const userExist = await UserModel.findOne({ email: email });
     if (userExist) {
-      res.status(httpStatus.NOT_FOUND).json({
+      res.status(httpStatus.BAD_REQUEST).json({
         status: "error",
         payload: "User with email already exist",
       });
       return;
     }
 
-    //has password
+    //hash password
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -69,7 +70,7 @@ export const createUser = async (req, res) => {
       password: hashedPassword,
       phoneNumber,
       userCode: generateCode(6),
-      role: "admin",
+      // role: "admin",
     });
     res.status(httpStatus.OK).json({
       status: "success",

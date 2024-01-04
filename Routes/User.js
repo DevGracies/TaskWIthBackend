@@ -18,7 +18,10 @@ import {
 const router = express.Router();
 
 router.route("/login").post(validationMiddleware(LoginUserSchema), loginUser);
-router.route("/").post(validationMiddleware(CreateUserSchema), createUser);
+router
+  .route("/")
+  .post(validationMiddleware(CreateUserSchema), createUser)
+  .get(getUsers);
 router
   .route("/:id")
   .get(verifyUser, authorized(["default", "admin"]), getUser)

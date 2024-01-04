@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 
 const TaskSchema = mongoose.Schema(
   {
-    title: { type: String, required: true },
+    time: { type: Number },
     desc: { type: String, required: true },
+    date: { type: Number },
     status: {
       type: String,
       enum: ["pending", "completed"],

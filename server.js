@@ -5,8 +5,15 @@ import colors from "colors";
 import cors from "cors";
 import httpStatus from "http-status";
 import { dbConnect } from "./config/db.js";
+import path from "path";
 
-dotenv.config();
+// dotenv.config();
+const __dir = path.resolve();
+
+const envFilePath = path.resolve(__dir, ".env");
+dotenv.config({ path: envFilePath });
+
+// const { NODE_ENV } = process.env;
 const app = express();
 
 //general middlewares
@@ -15,9 +22,12 @@ app.use(morgan("dev"));
 //controllers
 import UserRoute from "./Routes/User.js";
 import TaskRoute from "./Routes/Task.js";
+import AdminRoute from "./Routes/AdminRoute.js";
 
+app.use(express.json());
 app.use("/users", UserRoute);
 app.use("/task", TaskRoute);
+app.use("/admin", AdminRoute);
 app.get("/", (req, res) => {
   res.status(httpStatus.OK).json({
     status: "success",
@@ -32,6 +42,7 @@ app.all("*", (req, res) => {
     payload: "Not found, no defined endpoint",
   });
 });
+console.log(process.env.NODE_ENV);
 //connect to db
 dbConnect()
   .then((result) => {

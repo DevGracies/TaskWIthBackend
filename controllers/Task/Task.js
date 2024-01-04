@@ -4,21 +4,15 @@ import taskModel from "../../models/Task.js";
 
 export const createTask = async (req, res) => {
   // collect required field from the body
-  const { title, desc } = req.body;
+  const { time, date, desc } = req.body;
   //    get the current user id
   const userId = req.user.id;
   // create the task record
+  
   try {
-    const titleExists = await taskModel.findOne({ title: title });
-    if (titleExists) {
-      res.status(httpStatus.BAD_REQUEST).json({
-        status: "error",
-        payload: "Title exists.",
-      });
-      return;
-    }
     const task = await taskModel.create({
-      title,
+      time,
+      date,
       desc,
       userId,
     });
@@ -73,7 +67,7 @@ export const updateTask = async (req, res) => {
 
     const updatedTasks = await taskModel.findOneAndUpdate(
       { _id: taskId },
-      { desc, title },
+      { desc },
       { new: true }
     );
     res.status(httpStatus.OK).json({

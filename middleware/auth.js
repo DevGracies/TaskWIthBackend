@@ -22,7 +22,6 @@ export const verifyUser = async (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     //verify the token
     const decoded = JWT.verify(token, config.jwt.jwt_secret);
-
     const user = await UserModel.findById({ _id: decoded.id });
     if (!user) {
       res.status(httpStatus.BAD_REQUEST).json({

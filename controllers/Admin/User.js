@@ -24,7 +24,6 @@ export const updateRole = async (req, res) => {
       });
       return;
     }
-
     //if user is found, update user record
     const updatedRole = await UserModel.findOneAndUpdate(
       { _id: data.userId },
